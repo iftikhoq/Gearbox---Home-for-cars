@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="carCarousel" class="carousel slide" data-bs-ride="carousel" style="height: 70vh; width: 82vw; margin:auto;padding-top: 10px;">
+    <div class="carousel-inner">
+        {% for car in cars %}
+        {% if forloop.counter < 4 %}
+        <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
+            <img src="{{ car.img.url }}" class="d-block" alt="Car 1"  style="height: 70vh; width: 100%;">
+            <div class="carousel-caption d-md-block">
+                <h2>{{ car.brand }}</h2>
+                <p> {{ car.model }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        
+        
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container mt-4">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter by Brand
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="{% url 'home' %}">All Brands</a></li>
+            {% for brand in brands %}
+                <li><a class="dropdown-item" href="{% url 'brandpage' id=brand.id %}">{{ brand.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>        
+</div>
+
+<div class="container mt-4">
+    <div class="row row-cols-md-3 g-4">
+        {% for car in cars %}
+        <div class="col">
+        <div class="card h-100">
+            <a href="{% url 'carpage' id=car.id %}">
+                <img src="{{ car.img.url }}" class="card-img-top" style="height:200px">
+            </a>
+            <div class="card-body">
+                <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                <p class="card-text">Type: {{ car.fuel_type }}</p>
+                <p class="card-text">Price: {{ car.price }}</p>
+                {% if user.is_authenticated %}
+                <button class="btn btn-primary">Buy Now</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
