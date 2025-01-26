@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Checkout</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <!-- Billing Details -->
+            <div class="col-md-6">
+                <h4>Billing Details</h4>
+                <div class="mb-3">
+                    <label for="fullName" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" value="{{user.first_name}} {{user.last_name}}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" value="{{user.email}}" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" value="{{user.address}}" required>
+                </div>
+                
+                
+            </div>
+
+            <!-- Payment Details -->
+            <div class="col-md-6">
+                <h4>Payment Details</h4>
+                <div class="mb-3">
+                    <label for="cardName" class="form-label">Payment Method </label>
+                    <input type="text" class="form-control" id="cardname " placeholder="Bkash" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="cardNumber" class="form-label">TRX id</label>
+                    <input type="text" class="form-control" id="trxid" name="trxid" placeholder="Enter trxid here" required>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="mt-4">
+            <h4>Order Summary</h4>
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <input type="number" name="carid" value="{{car.id}}" hidden>
+                        <img src="{{car.img.url}}" alt="Car Image" class="img-thumbnail me-3" style="width: 100px; height: auto;">
+                        <span>{{car.brand.name}} {{car.model}}</span>
+                    </div>
+                    <strong>৳<span id="car-price">{{car.price}}</span></strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Tax</span>
+                    <strong>৳<span id="tax"></strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Other fees</span>
+                    <strong>৳<span id="other">20000.00</strong>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total</span>
+                    <input type="number" name="total" id="totalIN" hidden>
+                    <strong>৳<span id="total"></strong>
+                </li>
+            </ul>
+        </div>
+        <input type="submit" class="btn btn-primary">
+        </form>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const carPrice = parseFloat(document.getElementById("car-price").textContent);
+                const tax = carPrice * 0.2;
+                const total = carPrice + tax + 20000;
+        
+                document.getElementById("total").value = total;
+                document.getElementById("tax").textContent = tax.toFixed(2);
+                document.getElementById("total").textContent = total.toFixed(2);
+            });
+        </script>
+{% endblock %}

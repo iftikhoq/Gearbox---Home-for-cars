@@ -14,6 +14,8 @@ urlpatterns = [
     path('brandpage/<int:id>', views.BrandPage, name='brandpage'),
     path('carpage/<int:id>', views.CarPage, name='carpage'),
     path('updateprofile/', views.ProfileUpdate, name='profileupdate'),
+    path('checkout/<int:id>', views.Checkout, name='checkout'),
+    path('ordersprofile/', views.OrdersProfilePage, name='ordersprofile'),
 
     
     

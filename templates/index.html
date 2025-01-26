@@ -1,31 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div id="carCarousel" class="carousel slide" data-bs-ride="carousel" style="height: 70vh; width: 82vw; margin:auto;padding-top: 10px;">
-    <div class="carousel-inner">
-        {% for car in cars %}
-        {% if forloop.counter < 4 %}
-        <div class="carousel-item {% if forloop.counter == 1 %}active{% endif %}">
-            <img src="{{ car.img.url }}" class="d-block" alt="Car 1"  style="height: 70vh; width: 100%;">
-            <div class="carousel-caption d-md-block">
-                <h2>{{ car.brand }}</h2>
-                <p> {{ car.model }}</p>
-            </div>
+<section class="hero bg-light py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <!-- Text Section -->
+        <div class="col-md-6">
+          <h1 class="display-4 fw-bold">Find Your Dream Car</h1>
+          <p class="lead text-muted">Browse a wide range of high-quality cars at unbeatable prices. Drive your dream car today!</p>
         </div>
-        {% endif %}
-        {% endfor %}
-        
-        
+        <!-- Image Section -->
+        <div class="col-md-6 text-center">
+          <img src="{% static 'images/banner.png' %}" alt="Car" class="img-fluid rounded">
+        </div>
+      </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
+  </section>
 
 <div class="container mt-4">
     <div class="dropdown">
@@ -38,7 +28,8 @@
                 <li><a class="dropdown-item" href="{% url 'brandpage' id=brand.id %}">{{ brand.name }}</a></li>
             {% endfor %}
         </ul>
-    </div>        
+    </div>   
+    Total cars: {{carscount}}     
 </div>
 
 <div class="container mt-4">
@@ -54,7 +45,11 @@
                 <p class="card-text">Type: {{ car.fuel_type }}</p>
                 <p class="card-text">Price: {{ car.price }}</p>
                 {% if user.is_authenticated %}
-                <button class="btn btn-primary">Buy Now</button>
+                    {% if car.quantity == 0 %}
+                        <button class="btn btn-gray" disabled>Stock out</button>
+                    {% else %}
+                        <a href="{% url 'checkout' id=car.id %}" class="btn btn-primary">Buy Now</a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
