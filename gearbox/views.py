@@ -21,7 +21,7 @@ def BrandPage(request, id):
     brands = cmodels.Brand.objects.all()
     brand = get_object_or_404(cmodels.Brand, pk=id)
     cars = cmodels.Cars.objects.filter(brand=brand)
-    return render(request, 'index.html', {'cars': cars, 'brands': brands})
+    return render(request, 'index.html', {'cars': cars, 'brands': brands, 'carscount': cars.count})
 
 def CarPage(request, id):
     car = get_object_or_404(cmodels.Cars, pk=id)
@@ -60,11 +60,12 @@ def Checkout(request,id):
         carid = request.POST.get('carid')
         address = request.POST.get('address')
         trxid = request.POST.get('trxid')
+        total = request.POST.get('total')
 
         car = get_object_or_404(cmodels.Cars, pk=carid)
         car.quantity = car.quantity - 1
         car.save()
-        order = cusmodels.Orders(address = address, TRXid=trxid, car = car, customer = request.user)
+        order = cusmodels.Orders(address = address, TRXid=trxid, car = car, customer = request.user, totalamount=total)
         order.save()
         return redirect('profile')  
     else:

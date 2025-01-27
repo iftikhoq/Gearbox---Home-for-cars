@@ -4,32 +4,40 @@
 <section class="hero bg-light py-5">
     <div class="container">
       <div class="row align-items-center">
-        <!-- Text Section -->
         <div class="col-md-6">
           <h1 class="display-4 fw-bold">Find Your Dream Car</h1>
           <p class="lead text-muted">Browse a wide range of high-quality cars at unbeatable prices. Drive your dream car today!</p>
         </div>
-        <!-- Image Section -->
         <div class="col-md-6 text-center">
           <img src="{% static 'images/banner.png' %}" alt="Car" class="img-fluid rounded">
         </div>
       </div>
     </div>
   </section>
+  <div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Filter by Brand
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                        <a class="dropdown-item" href="{% url 'home' %}">All Brands</a>
+                    </li>
+                    {% for brand in brands %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'brandpage' id=brand.id %}">{{ brand.name }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
 
-<div class="container mt-4">
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Filter by Brand
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li><a class="dropdown-item" href="{% url 'home' %}">All Brands</a></li>
-            {% for brand in brands %}
-                <li><a class="dropdown-item" href="{% url 'brandpage' id=brand.id %}">{{ brand.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>   
-    Total cars: {{carscount}}     
+        <div class="col-md-6 text-md-end">
+            <h5 class="mb-0">Total Cars: <span class="fw-bold">{{ carscount }}</span></h5>
+        </div>
+    </div>
 </div>
 
 <div class="container mt-4">

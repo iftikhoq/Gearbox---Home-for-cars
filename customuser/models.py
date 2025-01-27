@@ -13,6 +13,7 @@ class Orders(models.Model):
     address = models.TextField(blank=True, null=True)
     TRXid = models.CharField(max_length=30, default="Dues")
     orderedat = models.DateTimeField(default=datetime.now)
+    totalamount = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.car.brand} {self.car.model}"

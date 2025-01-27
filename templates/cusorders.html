@@ -11,6 +11,7 @@
                 <th>Car</th>
                 <th>Address</th>
                 <th>Transaction ID</th>
+                <th>Total price</th>
                 <th>Order Date</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                     <td>{{ order.car.brand }} {{ order.car.model }}</td>
                     <td>{{ order.address }}</td>
                     <td>{{ order.TRXid }}</td>
+                    <td>{{ order.totalamount }}</td>
                     <td>{{ order.orderedat|date:"d M Y, H:i" }}</td>
                 </tr>
             {% empty %}
