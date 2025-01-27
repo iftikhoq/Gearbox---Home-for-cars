@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm 
 from django.contrib.auth import login, authenticate, logout,update_session_auth_hash
 from django.utils.decorators import method_decorator
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.urls import reverse_lazy
 from cars import models as cmodels
 from customuser import models as cusmodels
@@ -124,20 +124,20 @@ def LogoutPage(request):
 def ProfilePage(request):
     return render(request, 'profile.html')
 
-def Changepasswithprev(request):
-    if request.method  ==  'POST':
-        form = PasswordChangeForm(request.user, data = request.POST)
-        if form.is_valid():
-            form.save()
-            update_session_auth_hash(request, form.user)
-            messages.success(request, "You have successfully changed password.")
-            return redirect('profile')
-        else:
-            messages.error(request, "Please fill out form correctly.")
-    else:
-        form = PasswordChangeForm(request.user)
-    return render(request, 'changepasswithprev.html', {'form': form}) 
+class ChangePasswordView(PasswordChangeView):
+    template_name = 'changepasswithprev.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('profile')
 
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, "You have successfully changed your password.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Please fill out the form correctly.")
+        return super().form_invalid(form)
 
 class UserLoginView(LoginView):
     template_name = 'login.html' 
@@ -158,13 +158,14 @@ class UserLoginView(LoginView):
     def get_success_url(self):
         return self.success_url
 
-@login_required
-def ProfileUpdate(request):
-    if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('profile') 
-    else:
-        form = UpdateProfileForm(instance=request.user)
-    return render(request, 'profileupdate.html', {'form': form})
+
+
+@method_decorator(login_required, name='dispatch')
+class ProfileUpdateView(UpdateView):
+    model = cusmodels.CustomUser
+    form_class = UpdateProfileForm
+    template_name = 'profileupdate.html'
+    success_url = reverse_lazy('profile')
+
+    def get_object(self):
+        return self.request.user
